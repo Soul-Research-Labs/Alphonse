@@ -8,8 +8,8 @@
   ],
   "scripts": {
     "dev": "bun --filter '@alphonse/extension' dev",
-    "build": "bun --filter '@alphonse/extension' build",
-    "build:all": "bun --filter '*' build",
+    "build": "bun --filter '*' build",
+    "build:extension": "bun --filter '@alphonse/extension' build",
     "test": "bun --filter '*' test",
     "lint": "eslint .",
     "format": "prettier --write .",
