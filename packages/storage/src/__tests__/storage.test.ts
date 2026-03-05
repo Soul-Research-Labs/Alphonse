@@ -7,7 +7,7 @@ import { createCryptoProvider } from '@alphonse/core';
 import type { CryptoProvider } from '@alphonse/core';
 import { createInMemoryStorageAdapter } from '../adapters/memory';
 import { createEncryptedStorageAdapter } from '../encrypted';
-import { forensicWipe } from '../cleanup';
+import { forensicWipe, getForensicCleanupNotes } from '../cleanup';
 import type { StorageAdapter, StorageNamespace } from '../types/adapter';
 
 describe('EncryptedStorageAdapter', () => {
@@ -111,12 +111,14 @@ describe('forensicWipe', () => {
   });
 
   it('wipes all data across all namespaces', async () => {
-    const result = await forensicWipe(storage);
+    const result = await forensicWipe(storage, { platform: 'ios' });
     expect(result.ok).toBe(true);
     if (!result.ok) return;
 
     expect(result.value.keysWiped).toBeGreaterThanOrEqual(4);
     expect(result.value.namespacesWiped).toBe(5); // All 5 namespace wipe attempts
+    expect(result.value.namespaceErrors).toEqual([]);
+    expect(result.value.platformNotes.length).toBeGreaterThan(0);
 
     // Verify everything is gone
     for (const ns of ['VAULT_STORE', 'METADATA', 'PREFERENCES', 'TX_CACHE'] as StorageNamespace[]) {
@@ -131,6 +133,41 @@ describe('forensicWipe', () => {
     expect(result.ok).toBe(true);
     if (result.ok) {
       expect(result.value.keysWiped).toBe(0);
+      expect(result.value.namespaceErrors).toEqual([]);
     }
+  });
+
+  it('records non-fatal namespace errors and continues wipe', async () => {
+    const base = createInMemoryStorageAdapter();
+    const failingStorage: StorageAdapter = {
+      ...base,
+      keys: async (namespace) => {
+        if (namespace === 'SYNC_STATE') {
+          return {
+            ok: false,
+            error: { code: 'STORAGE_READ_FAILED', message: 'keys failed for SYNC_STATE' },
+          } as any;
+        }
+        return base.keys(namespace);
+      },
+    };
+
+    const result = await forensicWipe(failingStorage);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+
+    expect(result.value.namespaceErrors.some((e) => e.namespace === 'SYNC_STATE')).toBe(true);
+  });
+});
+
+describe('getForensicCleanupNotes', () => {
+  it('includes iOS keychain limitation note', () => {
+    const notes = getForensicCleanupNotes('ios');
+    expect(notes.some((n) => n.toLowerCase().includes('keychain'))).toBe(true);
+  });
+
+  it('includes Android uninstall note', () => {
+    const notes = getForensicCleanupNotes('android');
+    expect(notes.some((n) => n.toLowerCase().includes('android'))).toBe(true);
   });
 });

@@ -12,7 +12,7 @@ import type { EvmClientConfig, BlockTag } from './types/client';
 import type { NetworkConfig, RpcConfig, RpcEndpoint } from './types/network';
 import type { TransactionReceipt, TransactionStatus } from './types/transaction';
 import type { TokenBalance, TokenInfo } from './types/token';
-import { createRpcTransport, DEFAULT_RPC_CONFIG } from './rpc';
+import { createRpcTransport, DEFAULT_RPC_CONFIG, type ProxiedFetch } from './rpc';
 import { ERC20_ABI, formatTokenAmount } from './erc20';
 import { DEFAULT_NETWORK, DEFAULT_RPC_ENDPOINTS } from './networks';
 
@@ -76,6 +76,13 @@ export interface CreateEvmClientOptions {
   network?: NetworkConfig;
   rpcEndpoints?: readonly RpcEndpoint[];
   rpcConfig?: Partial<typeof DEFAULT_RPC_CONFIG>;
+  /**
+   * Proxy-aware fetch function for routing RPC traffic through a proxy.
+   * Obtain via `createProxiedFetch()` from `@alphonse/evm`.
+   * When provided all RPC traffic routes through the proxy; on failure
+   * the transport throws — it never falls back to direct.
+   */
+  proxyFetch?: ProxiedFetch;
 }
 
 export function createEvmClient(options: CreateEvmClientOptions = {}): EvmClient {
@@ -93,7 +100,7 @@ export function createEvmClient(options: CreateEvmClientOptions = {}): EvmClient
     retryBackoffMs: options.rpcConfig?.retryBackoffMs ?? DEFAULT_RPC_CONFIG.retryBackoffMs,
   };
 
-  const transport = createRpcTransport(rpcConfig);
+  const transport = createRpcTransport(rpcConfig, options.proxyFetch);
 
   // Build a minimal viem Chain definition from our NetworkConfig
   const viemChain: Chain = {

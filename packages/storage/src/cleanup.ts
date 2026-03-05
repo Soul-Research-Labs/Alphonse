@@ -25,6 +25,55 @@ const WIPE_ORDER: StorageNamespace[] = [
   'PREFERENCES',
 ];
 
+export interface ForensicWipeNamespaceError {
+  readonly namespace: StorageNamespace;
+  readonly message: string;
+}
+
+export interface ForensicWipeReport {
+  readonly namespacesWiped: number;
+  readonly keysWiped: number;
+  /** Namespaces that had non-fatal wipe errors. */
+  readonly namespaceErrors: readonly ForensicWipeNamespaceError[];
+  /** Platform limitation notes to surface in UX/docs. */
+  readonly platformNotes: readonly string[];
+}
+
+export interface ForensicWipeOptions {
+  readonly wipeOrder?: readonly StorageNamespace[];
+  readonly platform?: 'ios' | 'android' | 'web' | 'unknown';
+  /** Keep true for defense-in-depth belt-and-suspenders clear pass. */
+  readonly clearAllAfter?: boolean;
+}
+
+export function getForensicCleanupNotes(
+  platform: ForensicWipeOptions['platform'] = 'unknown'
+): readonly string[] {
+  const common = [
+    'Flash storage wear-leveling may retain previous physical blocks after overwrite.',
+  ];
+
+  if (platform === 'ios') {
+    return [
+      'iOS keychain items can persist after uninstall unless explicitly deleted before uninstall.',
+      ...common,
+    ];
+  }
+
+  if (platform === 'android') {
+    return ['Android app data is normally removed on uninstall by the OS.', ...common];
+  }
+
+  if (platform === 'web') {
+    return [
+      'Browser storage clearing behavior can vary by engine and private browsing mode.',
+      ...common,
+    ];
+  }
+
+  return common;
+}
+
 /**
  * Overwrite all stored values with zeros, then delete them.
  *
@@ -36,39 +85,67 @@ const WIPE_ORDER: StorageNamespace[] = [
  * This provides defense-in-depth against data recovery, though
  * flash storage wear leveling may retain prior writes.
  */
-export async function forensicWipe(storage: StorageAdapter): AsyncResult<{
-  namespacesWiped: number;
-  keysWiped: number;
-}> {
+export async function forensicWipe(
+  storage: StorageAdapter,
+  options: ForensicWipeOptions = {}
+): AsyncResult<ForensicWipeReport> {
+  const wipeOrder = options.wipeOrder ?? WIPE_ORDER;
+  const clearAllAfter = options.clearAllAfter ?? true;
+
   let keysWiped = 0;
   let namespacesWiped = 0;
+  const namespaceErrors: ForensicWipeNamespaceError[] = [];
 
   try {
-    for (const ns of WIPE_ORDER) {
+    for (const ns of wipeOrder) {
       const keysResult = await storage.keys(ns);
-      if (!keysResult.ok) continue;
-
-      for (const key of keysResult.value) {
-        // Read current value to get length
-        const readResult = await storage.get(ns, key);
-        if (readResult.ok && readResult.value !== null) {
-          // Overwrite with zeros of same length
-          const zeros = new Uint8Array(readResult.value.length);
-          await storage.set(ns, key, zeros);
-        }
-        // Delete the key
-        await storage.delete(ns, key);
-        keysWiped++;
+      if (!keysResult.ok) {
+        namespaceErrors.push({ namespace: ns, message: keysResult.error.message });
+        continue;
       }
 
-      await storage.clear(ns);
+      for (const key of keysResult.value) {
+        try {
+          // Read current value to get length
+          const readResult = await storage.get(ns, key);
+          if (readResult.ok && readResult.value !== null) {
+            // Overwrite with zeros of same length
+            const zeros = new Uint8Array(readResult.value.length);
+            await storage.set(ns, key, zeros);
+          }
+
+          // Delete the key
+          await storage.delete(ns, key);
+          keysWiped++;
+        } catch (cause) {
+          namespaceErrors.push({
+            namespace: ns,
+            message: `Failed to wipe key "${key}": ${String(cause)}`,
+          });
+        }
+      }
+
+      const clearResult = await storage.clear(ns);
+      if (!clearResult.ok) {
+        namespaceErrors.push({ namespace: ns, message: clearResult.error.message });
+      }
       namespacesWiped++;
     }
 
-    // Final clearAll as belt-and-suspenders
-    await storage.clearAll();
+    if (clearAllAfter) {
+      // Final clearAll as belt-and-suspenders
+      const finalClear = await storage.clearAll();
+      if (!finalClear.ok) {
+        return finalClear;
+      }
+    }
 
-    return Result.ok({ namespacesWiped, keysWiped });
+    return Result.ok({
+      namespacesWiped,
+      keysWiped,
+      namespaceErrors,
+      platformNotes: getForensicCleanupNotes(options.platform),
+    });
   } catch (cause) {
     return Result.err({
       code: 'STORAGE_WRITE_FAILED' as const,

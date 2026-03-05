@@ -9,16 +9,24 @@ import { Warning } from '../src/components/Warning';
 import { useWallet } from '../src/context/WalletContext';
 
 export default function LockScreen() {
-  const { state, unlock } = useWallet();
+  const { state, unlock, unlockWithPin } = useWallet();
   const [password, setPassword] = useState('');
+  const [pin, setPin] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const pinsConfigured = state.duressPinsConfigured;
 
   async function handleUnlock() {
     if (password.length === 0 || loading) return;
     setLoading(true);
     try {
-      await unlock(password);
+      if (pinsConfigured && pin.length > 0) {
+        await unlockWithPin(password, pin);
+      } else {
+        await unlock(password);
+      }
       setPassword('');
+      setPin('');
     } finally {
       setLoading(false);
     }
@@ -39,10 +47,22 @@ export default function LockScreen() {
             secureTextEntry
             value={password}
             onChangeText={setPassword}
-            onSubmitEditing={handleUnlock}
-            returnKeyType="go"
+            onSubmitEditing={pinsConfigured ? undefined : handleUnlock}
+            returnKeyType={pinsConfigured ? 'next' : 'go'}
             autoFocus
           />
+
+          {pinsConfigured ? (
+            <Input
+              placeholder="PIN"
+              secureTextEntry
+              keyboardType="number-pad"
+              value={pin}
+              onChangeText={setPin}
+              onSubmitEditing={handleUnlock}
+              returnKeyType="go"
+            />
+          ) : null}
 
           {state.error ? <Warning severity="danger" message={state.error} /> : null}
 

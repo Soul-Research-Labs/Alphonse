@@ -8,3 +8,5 @@
  */
 
 export * from './types/index';
+export * from './aztec/index';
+export * from './state/index';

@@ -17,6 +17,7 @@
       "dependencies": {
         "@alphonse/core": "workspace:*",
         "@alphonse/evm": "workspace:*",
+        "@alphonse/privacy": "workspace:*",
         "@alphonse/storage": "workspace:*",
         "@expo/vector-icons": "^15.1.0",
         "expo": "~55.0.4",
@@ -69,11 +70,23 @@
         "vitest": "^3.0.5",
       },
     },
+    "packages/hw-wallet": {
+      "name": "@alphonse/hw-wallet",
+      "version": "0.0.1",
+      "dependencies": {
+        "@alphonse/core": "workspace:*",
+        "@alphonse/evm": "workspace:*",
+      },
+      "devDependencies": {
+        "vitest": "^3.0.5",
+      },
+    },
     "packages/privacy": {
       "name": "@alphonse/privacy",
       "version": "0.0.1",
       "dependencies": {
         "@alphonse/core": "workspace:*",
+        "@alphonse/storage": "workspace:*",
       },
       "devDependencies": {
         "vitest": "^3.0.5",
@@ -96,6 +109,8 @@
     "@alphonse/core": ["@alphonse/core@workspace:packages/core"],
 
     "@alphonse/evm": ["@alphonse/evm@workspace:packages/evm"],
+
+    "@alphonse/hw-wallet": ["@alphonse/hw-wallet@workspace:packages/hw-wallet"],
 
     "@alphonse/mobile": ["@alphonse/mobile@workspace:apps/mobile"],
 
