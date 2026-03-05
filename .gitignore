@@ -4,10 +4,8 @@ dist
 *.local
 .env
 .env.*
-*.tsbuildinfo
-*.d.ts.map
 
 # Expo
-apps/mobile/.expo/
-apps/mobile/android/
-apps/mobile/ios/
+.expo/
+/android
+/ios

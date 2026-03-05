@@ -152,9 +152,12 @@ describe('VaultStateTracker', () => {
 
     it('handles adapter failure', async () => {
       const failAdapter = createMockAdapter({
-        resyncState: vi.fn().mockResolvedValue(Result.err({
-          code: 'VAULT_SYNC_FAILED', message: 'PXE unreachable',
-        })),
+        resyncState: vi.fn().mockResolvedValue(
+          Result.err({
+            code: 'VAULT_SYNC_FAILED',
+            message: 'PXE unreachable',
+          })
+        ),
       });
       const storage = createInMemoryStorageAdapter();
       const tracker = createVaultStateTracker({ adapter: failAdapter, storage });
@@ -184,7 +187,9 @@ describe('VaultStateTracker', () => {
           computedAt: Date.now() as Timestamp,
         },
       ];
-      (adapter.getVaultBalance as ReturnType<typeof vi.fn>).mockResolvedValue(Result.ok(newBalances));
+      (adapter.getVaultBalance as ReturnType<typeof vi.fn>).mockResolvedValue(
+        Result.ok(newBalances)
+      );
 
       const result = await tracker.refreshBalances('0xOwner' as Address);
 

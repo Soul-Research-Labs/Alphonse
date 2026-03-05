@@ -4,11 +4,8 @@ export default [
     ignores: [
       'eslint.config.js',
       '.prettierrc.json',
-      'apps/mobile/babel.config.js',
-      'apps/mobile/metro.config.js',
-      'apps/mobile/tailwind.config.js',
-      '**/routeTree.gen.ts',
-      '**/vite.config.ts',
+      'babel.config.js',
+      'metro.config.js',
       '**/dist/**',
       '**/node_modules/**',
     ],

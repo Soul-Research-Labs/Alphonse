@@ -9,7 +9,7 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@alphonse/core": "workspace:*",
+    "@alphonse/core": "*",
     "viem": "^2.46.3"
   },
   "devDependencies": {

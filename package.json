@@ -2,24 +2,48 @@
   "name": "alphonse",
   "private": true,
   "type": "module",
+  "main": "expo-router/entry",
   "workspaces": [
-    "packages/*",
-    "apps/*"
+    "packages/*"
   ],
   "scripts": {
-    "dev": "bun --filter '*' dev",
-    "dev:mobile": "cd apps/mobile && bun dev",
-    "build": "bun --filter '*' build",
-    "test": "bun --filter '*' test",
+    "dev": "expo start",
+    "dev:android": "expo run:android",
+    "dev:ios": "expo run:ios",
+    "test": "npm --workspaces test",
     "lint": "eslint .",
     "format": "prettier --write .",
     "check": "prettier --check . && eslint .",
     "fix": "prettier --write . && eslint --fix ."
   },
+  "dependencies": {
+    "@alphonse/core": "*",
+    "@alphonse/evm": "*",
+    "@alphonse/privacy": "*",
+    "@alphonse/storage": "*",
+    "@expo/vector-icons": "^15.1.0",
+    "expo": "~55.0.4",
+    "expo-clipboard": "~55.0.8",
+    "expo-crypto": "~55.0.9",
+    "expo-router": "~55.0.4",
+    "expo-secure-store": "~55.0.8",
+    "react": "19.2.0",
+    "react-native": "0.83.2",
+    "react-native-gesture-handler": "~2.30.0",
+    "react-native-qrcode-svg": "^6.3.21",
+    "react-native-safe-area-context": "~5.6.2",
+    "react-native-screens": "~4.23.0",
+    "react-native-svg": "^15.15.3",
+    "uniwind": "^1.3.2"
+  },
   "devDependencies": {
-    "@types/bun": "^1.3.9",
     "eslint": "^9.0.0",
     "prettier": "^3.5.3",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "@tailwindcss/node": "^4.2.0",
+    "@tailwindcss/oxide": "^4.2.0",
+    "@types/react": "~19.2.0",
+    "babel-preset-expo": "~55.0.10",
+    "tailwindcss": "^4.1.13"
   }
 }

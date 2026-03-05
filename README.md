@@ -113,16 +113,16 @@ bun run check
 
 ### Scripts
 
-| Command | Description |
-| --- | --- |
-| `bun run dev` | Dev across all workspace packages |
-| `bun run dev:mobile` | Expo dev server (QR + Expo Go) |
-| `bun run build` | Build all projects |
-| `bun run test` | Run vitest across all workspace packages |
-| `bun run lint` | Lint entire repository with ESLint |
-| `bun run format` | Format all files with Prettier |
-| `bun run fix` | Format + lint fix in one command |
-| `bun run check` | Prettier check + lint (CI-friendly, read-only) |
+| Command              | Description                                    |
+| -------------------- | ---------------------------------------------- |
+| `bun run dev`        | Dev across all workspace packages              |
+| `bun run dev:mobile` | Expo dev server (QR + Expo Go)                 |
+| `bun run build`      | Build all projects                             |
+| `bun run test`       | Run vitest across all workspace packages       |
+| `bun run lint`       | Lint entire repository with ESLint             |
+| `bun run format`     | Format all files with Prettier                 |
+| `bun run fix`        | Format + lint fix in one command               |
+| `bun run check`      | Prettier check + lint (CI-friendly, read-only) |
 
 ### Running individual package tests
 
@@ -134,13 +134,13 @@ cd packages/storage && npx vitest run   # 25 tests
 
 ## Structure
 
-| Path | Package | Description |
-| --- | --- | --- |
-| `packages/core/` | `@alphonse/core` | Key management, SRP, vault store, wallet manager, address checker, metadata CRUD, tx enrichment, CSV export |
-| `packages/evm/` | `@alphonse/evm` | viem-based EVM client, EIP-1559 fee estimation, ERC-20 utilities, tx history tracker, RPC endpoint rotation |
-| `packages/privacy/` | `@alphonse/privacy` | Privacy protocol abstraction layer. Aztec adapter types for v1. No implementation yet. |
-| `packages/storage/` | `@alphonse/storage` | Encrypted storage adapters, forensic wipe, snapshot export/import, in-memory adapter for tests |
-| `apps/mobile/` | `@alphonse/mobile` | React Native (Expo 55 + Uniwind) mobile app with file-based routing |
+| Path                | Package             | Description                                                                                                 |
+| ------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `packages/core/`    | `@alphonse/core`    | Key management, SRP, vault store, wallet manager, address checker, metadata CRUD, tx enrichment, CSV export |
+| `packages/evm/`     | `@alphonse/evm`     | viem-based EVM client, EIP-1559 fee estimation, ERC-20 utilities, tx history tracker, RPC endpoint rotation |
+| `packages/privacy/` | `@alphonse/privacy` | Privacy protocol abstraction layer. Aztec adapter types for v1. No implementation yet.                      |
+| `packages/storage/` | `@alphonse/storage` | Encrypted storage adapters, forensic wipe, snapshot export/import, in-memory adapter for tests              |
+| `apps/mobile/`      | `@alphonse/mobile`  | React Native (Expo 55 + Uniwind) mobile app with file-based routing                                         |
 
 Each package has its own README with API documentation. See:
 
@@ -152,16 +152,16 @@ Each package has its own README with API documentation. See:
 
 ## Tech stack
 
-| Layer | Technology |
-| --- | --- |
-| Runtime | Bun 1.x |
-| Language | TypeScript 5.7 (strict mode, ES2022 target) |
-| Mobile | React Native 0.83 · Expo 55 · Expo Router |
-| Styling | Tailwind CSS 4 · Uniwind |
-| EVM | viem 2.x |
-| Crypto | @noble/ciphers · @noble/curves · @noble/hashes · @scure/bip32 · @scure/bip39 |
-| Testing | vitest 3.x |
-| Linting | ESLint 9 · Prettier 3 |
+| Layer    | Technology                                                                   |
+| -------- | ---------------------------------------------------------------------------- |
+| Runtime  | Bun 1.x                                                                      |
+| Language | TypeScript 5.7 (strict mode, ES2022 target)                                  |
+| Mobile   | React Native 0.83 · Expo 55 · Expo Router                                    |
+| Styling  | Tailwind CSS 4 · Uniwind                                                     |
+| EVM      | viem 2.x                                                                     |
+| Crypto   | @noble/ciphers · @noble/curves · @noble/hashes · @scure/bip32 · @scure/bip39 |
+| Testing  | vitest 3.x                                                                   |
+| Linting  | ESLint 9 · Prettier 3                                                        |
 
 ## Coding standards
 
@@ -174,14 +174,14 @@ Each package has its own README with API documentation. See:
 
 ## Roadmap
 
-| Milestone | Scope | Status |
-| --- | --- | --- |
-| 1 | Mobile public wallet — create/import, send/receive, tx history, address checker | ✅ Complete |
-| 2 | Neobank UX — labels, notes, budgets, unified feed, pool badges, CSV export | ✅ Complete |
-| 3 | Vault integration — shield, private send, unshield, state tracking (Aztec) | Planned |
-| 4 | Hardware wallet (Ledger/Trezor), Tor/proxy, forensic cleanup | Planned |
-| 5 | Agent Vault, NFC tap-to-pay | Future |
-| 6 | Additional privacy chains (future evaluation) | Future |
+| Milestone | Scope                                                                           | Status      |
+| --------- | ------------------------------------------------------------------------------- | ----------- |
+| 1         | Mobile public wallet — create/import, send/receive, tx history, address checker | ✅ Complete |
+| 2         | Neobank UX — labels, notes, budgets, unified feed, pool badges, CSV export      | ✅ Complete |
+| 3         | Vault integration — shield, private send, unshield, state tracking (Aztec)      | Planned     |
+| 4         | Hardware wallet (Ledger/Trezor), Tor/proxy, forensic cleanup                    | Planned     |
+| 5         | Agent Vault, NFC tap-to-pay                                                     | Future      |
+| 6         | Additional privacy chains (future evaluation)                                   | Future      |
 
 ## Contributing
 

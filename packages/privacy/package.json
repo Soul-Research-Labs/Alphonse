@@ -9,8 +9,8 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@alphonse/core": "workspace:*",
-    "@alphonse/storage": "workspace:*"
+    "@alphonse/core": "*",
+    "@alphonse/storage": "*"
   },
   "devDependencies": {
     "vitest": "^3.0.5"
