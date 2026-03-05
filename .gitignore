@@ -4,4 +4,10 @@ dist
 *.local
 .env
 .env.*
-.tanstack
+*.tsbuildinfo
+*.d.ts.map
+
+# Expo
+apps/mobile/.expo/
+apps/mobile/android/
+apps/mobile/ios/

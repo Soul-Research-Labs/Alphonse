@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "Alphonse",
+    "slug": "alphonse-mobile",
+    "version": "0.0.1",
+    "scheme": "alphonse",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "plugins": ["expo-secure-store"],
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#f8fafc"
+      },
+      "package": "com.alphonse.wallet"
+    }
+  }
+}

@@ -10,5 +10,12 @@
   },
   "devDependencies": {
     "vitest": "^3.0.5"
+  },
+  "dependencies": {
+    "@noble/ciphers": "^2.1.1",
+    "@noble/curves": "^2.0.1",
+    "@noble/hashes": "^2.0.1",
+    "@scure/bip32": "^2.0.1",
+    "@scure/bip39": "^2.0.1"
   }
 }

@@ -2,9 +2,9 @@
  * @alphonse/privacy
  *
  * Abstraction layer for privacy protocols.
- * Placeholder — adapter interfaces will be added when vault work begins.
+ * Aztec adapter (v1). Future adapters are evaluation-only.
  *
  * Platform-agnostic — no browser or mobile APIs here.
  */
 
-export const PACKAGE_NAME = '@alphonse/privacy' as const;
+export * from './types/index';

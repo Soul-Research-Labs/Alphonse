@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+@import 'uniwind';
+
+@theme {
+  --color-brand-50: #f0f4ff;
+  --color-brand-100: #dbe4fe;
+  --color-brand-200: #bfcffc;
+  --color-brand-300: #93aef8;
+  --color-brand-400: #6584f2;
+  --color-brand-500: #4361eb;
+  --color-brand-600: #2e41df;
+  --color-brand-700: #2632cc;
+  --color-brand-800: #242ca6;
+  --color-brand-900: #232b83;
+  --color-brand-950: #191d50;
+}
